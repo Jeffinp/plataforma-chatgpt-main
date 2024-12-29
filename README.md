@@ -1,15 +1,15 @@
-# Jogo de Plataforma
+# Jogo de Plataforma (Direita)
 
-Este projeto é um jogo de plataforma 2D desenvolvido em JavaScript com a biblioteca p5.js. O jogo foi iniciado com base no código fornecido por [guilhermesilveira](https://github.com/guilhermesilveira/plataforma-chatgpt) e, desde então, passou por significativas modificações e melhorias.
+Este projeto é um jogo de plataforma 2D desenvolvido em JavaScript com a biblioteca p5.js. O jogo foi inicialmente inspirado no código de [guilhermesilveira](https://github.com/guilhermesilveira/plataforma-chatgpt) e, desde então, passou por várias melhorias e ajustes.
 
 ## ✨ Funcionalidades
 
-*   **Animação Suave:** Animação de corrida do personagem com velocidade ajustável para uma experiência visual mais agradável.
-*   **Inimigos:** Um inimigo se move da direita para a esquerda, causando "Game Over" em caso de colisão.
-*   **Colisão Pixel-Perfect:** Sistema de colisão preciso que detecta a sobreposição de pixels entre os sprites do personagem e do inimigo.
-*   **Pontuação:** Sistema de pontuação que aumenta continuamente com o tempo de jogo.
-*   **Reinício do Jogo:** Botão para reiniciar o jogo após "Game Over", redefinindo o estado do jogo para as condições iniciais.
-*   **Interface Aprimorada:** Interface de usuário melhorada com a adição de ícones (da biblioteca [Iconify](https://iconify.design/)) e um design mais limpo e moderno.
+*   **Movimento Unidirecional:** O personagem se move apenas para a direita, criando um desafio único e contínuo de progressão.
+*   **Animação Suave:** A animação de corrida do personagem possui velocidade ajustável, oferecendo uma experiência visual fluída.
+*   **Espinhos:** Obstáculos fixos no cenário que, ao colidir com o personagem, resultam em "Game Over".
+*   **Colisão Pixel-Perfect:** Sistema de detecção de colisões preciso que verifica a sobreposição de pixels entre o personagem e os espinhos.
+*   **Pontuação:** A pontuação aumenta progressivamente com o tempo de jogo, incentivando o jogador a continuar correndo.
+*   **Reinício do Jogo:** Após o "Game Over", o jogador pode reiniciar o jogo e retornar ao estado inicial.
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -52,4 +52,3 @@ Para executar o jogo localmente, siga os passos abaixo:
 ## 🌟 Agradecimentos
 
 *   Agradecimento especial a [guilhermesilveira](https://github.com/guilhermesilveira/plataforma-chatgpt) pelo código base que serviu para eu treinar e demonstrar como melhorar o código.
-
