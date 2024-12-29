@@ -1,26 +1,31 @@
-// Constantes
-const LARGURA_TELA = 800;
-const ALTURA_TELA = 400;
-const TAMANHO_CHAO = 64;
-const ALTURA_PERSONAGEM = 96;
-const LARGURA_PERSONAGEM = 96;
-const ALTURA_INIMIGO = 64;
-const LARGURA_INIMIGO = 64;
-const ALTURA_INICIAL_PULO = -18;
-const GRAVIDADE = 0.5;
-const VELOCIDADE_INICIAL = 2.5;
-const INCREMENTO_VELOCIDADE = 0.05;
+// Constantes para melhorar a legibilidade e manutenção
+const CONFIG = {
+    LARGURA_TELA: 800,
+    ALTURA_TELA: 400,
+    TAMANHO_CHAO: 64,
+    GRAVIDADE: 0.5,
+    VELOCIDADE_INICIAL: 2.5,
+    INCREMENTO_VELOCIDADE: 0.05,
+    ALTURA_INICIAL_PULO: -18
+};
 
-// Variáveis
+// Estados do jogo
+const ESTADO_JOGO = {
+    JOGANDO: 0,
+    GAME_OVER: 1
+};
+
+let estadoAtual = ESTADO_JOGO.JOGANDO;
+
+// Objetos do Jogo
 let personagem = {
     x: 50,
-    y: ALTURA_TELA - ALTURA_PERSONAGEM - TAMANHO_CHAO,
-    largura: LARGURA_PERSONAGEM,
-    altura: ALTURA_PERSONAGEM,
+    y: CONFIG.ALTURA_TELA - 96 - CONFIG.TAMANHO_CHAO,
+    largura: 96,
+    altura: 96,
     pulando: false,
-    alturaPulo: ALTURA_INICIAL_PULO,
+    alturaPulo: CONFIG.ALTURA_INICIAL_PULO,
     velocidadePulo: 0,
-    gravidade: GRAVIDADE,
     sprite: {
         atual: 0,
         array: [],
@@ -31,26 +36,40 @@ let personagem = {
 };
 
 let inimigo = {
-    x: LARGURA_TELA,
-    y: ALTURA_TELA - ALTURA_INIMIGO - TAMANHO_CHAO,
-    largura: LARGURA_INIMIGO,
-    altura: ALTURA_INIMIGO,
+    x: CONFIG.LARGURA_TELA,
+    y: CONFIG.ALTURA_TELA - 64 - CONFIG.TAMANHO_CHAO,
+    largura: 64,
+    altura: 64,
     sprite: null,
     mascara: null
+};
+
+// Armazenar estado inicial para reset
+const ESTADO_INICIAL_PERSONAGEM = {
+    x: personagem.x,
+    y: personagem.y,
+    pulando: false,
+    velocidadePulo: 0
+};
+
+const ESTADO_INICIAL_INIMIGO = {
+    x: inimigo.x,
+    y: inimigo.y
 };
 
 let chao = [];
 let chaoSprite;
 let puloSound;
-let velocidade = VELOCIDADE_INICIAL;
+let velocidade = CONFIG.VELOCIDADE_INICIAL;
 let restartButton;
+let pontuacao;
 
 // Classe Pontuacao
 class Pontuacao {
     constructor() {
         this.valor = 0;
-        this.x = 30; // Posição X da pontuação
-        this.y = 40; // Posição Y da pontuação
+        this.x = 30;
+        this.y = 40;
         this.tamanhoFonte = 30;
         this.cor = color(255);
         this.texto = "Pontuação: ";
@@ -63,13 +82,12 @@ class Pontuacao {
     exibir() {
         textSize(this.tamanhoFonte);
         fill(this.cor);
-        textAlign(LEFT, TOP); // Define o alinhamento do texto como esquerda e topo
+        textAlign(LEFT, TOP);
         let textoPontuacao = this.texto + Math.floor(this.valor);
         let larguraTexto = textWidth(textoPontuacao);
 
-        // Verifica se a pontuação está saindo da tela pela direita
-        if (this.x + larguraTexto > LARGURA_TELA - 20) {
-            this.x = LARGURA_TELA - larguraTexto - 20; // Ajusta a posição X se estiver saindo
+        if (this.x + larguraTexto > CONFIG.LARGURA_TELA - 20) {
+            this.x = CONFIG.LARGURA_TELA - larguraTexto - 20;
         }
 
         text(textoPontuacao, this.x, this.y);
@@ -77,11 +95,9 @@ class Pontuacao {
 
     resetar() {
         this.valor = 0;
-        this.x = 30; // Resetar a posição X
+        this.x = 30;
     }
 }
-
-let pontuacao; // Instância da classe Pontuacao
 
 // Pré-carregamento de assets
 function preload() {
@@ -92,37 +108,42 @@ function preload() {
     inimigo.sprite = loadImage('assets/platformPack_tile043.png');
     chaoSprite = loadImage('assets/platformPack_tile013.png');
     puloSound = loadSound('assets/footstep09.ogg');
-
-    // Carrega as máscaras de colisão
     personagem.mascara = loadImage('assets/platformChar_mask.png');
     inimigo.mascara = loadImage('assets/platformPack_tile043_mask.png');
 }
 
 // Configuração inicial
 function setup() {
-    let canvas = createCanvas(LARGURA_TELA, ALTURA_TELA);
+    let canvas = createCanvas(CONFIG.LARGURA_TELA, CONFIG.ALTURA_TELA);
     canvas.parent('canvas-container');
 
-    // Inicialização do chão
     reiniciarChao();
 
     restartButton = select('#restart-button');
     restartButton.mousePressed(reiniciarJogo);
+    restartButton.style('display', 'none'); // Inicia oculto
 
-    // Cria a instância da classe Pontuacao
     pontuacao = new Pontuacao();
 }
 
 // Loop principal
 function draw() {
+    if (estadoAtual === ESTADO_JOGO.JOGANDO) {
+        atualizarJogo();
+    } else if (estadoAtual === ESTADO_JOGO.GAME_OVER) {
+        exibirGameOver();
+    }
+}
+
+function atualizarJogo() {
     background(220);
 
     // Desenhar e mover o chão
     for (let tile of chao) {
         image(tile.sprite, tile.x, tile.y, tile.largura, tile.altura);
         tile.x -= velocidade;
-        if (tile.x <= -TAMANHO_CHAO) {
-            tile.x = LARGURA_TELA + (tile.x + TAMANHO_CHAO);
+        if (tile.x <= -CONFIG.TAMANHO_CHAO) {
+            tile.x = CONFIG.LARGURA_TELA + (tile.x + CONFIG.TAMANHO_CHAO);
         }
     }
 
@@ -139,9 +160,9 @@ function draw() {
     // Lógica do pulo
     if (personagem.pulando) {
         personagem.y += personagem.velocidadePulo;
-        personagem.velocidadePulo += personagem.gravidade;
-        if (personagem.y > ALTURA_TELA - ALTURA_PERSONAGEM - TAMANHO_CHAO) {
-            personagem.y = ALTURA_TELA - ALTURA_PERSONAGEM - TAMANHO_CHAO;
+        personagem.velocidadePulo += CONFIG.GRAVIDADE;
+        if (personagem.y > CONFIG.ALTURA_TELA - personagem.altura - CONFIG.TAMANHO_CHAO) {
+            personagem.y = CONFIG.ALTURA_TELA - personagem.altura - CONFIG.TAMANHO_CHAO;
             personagem.pulando = false;
         }
     }
@@ -151,50 +172,47 @@ function draw() {
     inimigo.x -= velocidade;
 
     if (inimigo.x < -inimigo.largura) {
-        inimigo.x = LARGURA_TELA;
-        velocidade += INCREMENTO_VELOCIDADE;
+        inimigo.x = CONFIG.LARGURA_TELA;
+        velocidade += CONFIG.INCREMENTO_VELOCIDADE;
     }
 
     // Atualizar e exibir a pontuação
     pontuacao.atualizar();
     pontuacao.exibir();
 
-    // Verificar colisão (Pixel-Perfect)
-    if (verificaColisaoPixelPerfect(personagem, inimigo)) {
-        console.log("Colisão detectada!");
-
-        // Exibe a mensagem de Game Over
-        textSize(64);
-        fill(255, 0, 0);
-        textAlign(CENTER, CENTER);
-        text("Game Over", width / 2, height / 2 - 64);
-
-        // Exibe a pontuação final
-        textSize(22);
-        fill(255);
-        text("Pontuação Final: " + Math.floor(pontuacao.valor), width / 2, height / 2);
-
-        // Mostra o botão de reiniciar
-        restartButton.style('display', 'block');
-
-        noLoop();
+    // Verificar colisão com Bounding Box antes do Pixel-Perfect
+    if (verificaColisaoBoundingBox(personagem, inimigo) &&
+        verificaColisaoPixelPerfect(personagem, inimigo)) {
+        estadoAtual = ESTADO_JOGO.GAME_OVER;
     }
+}
+
+function exibirGameOver() {
+    textSize(64);
+    fill(255, 0, 0);
+    textAlign(CENTER, CENTER);
+    text("Game Over", width / 2, height / 2 - 64);
+
+    textSize(22);
+    fill(255);
+    text("Pontuação Final: " + Math.floor(pontuacao.valor), width / 2, height / 2);
+
+    restartButton.style('display', 'block');
+    noLoop();
 }
 
 // Função para reiniciar o jogo
 function reiniciarJogo() {
-    personagem.x = 50;
-    personagem.y = ALTURA_TELA - ALTURA_PERSONAGEM - TAMANHO_CHAO;
-    personagem.pulando = false;
-    personagem.velocidadePulo = 0;
-    inimigo.x = LARGURA_TELA;
-    inimigo.y = ALTURA_TELA - ALTURA_INIMIGO - TAMANHO_CHAO;
-    velocidade = VELOCIDADE_INICIAL;
+    estadoAtual = ESTADO_JOGO.JOGANDO;
+    personagem.x = ESTADO_INICIAL_PERSONAGEM.x;
+    personagem.y = ESTADO_INICIAL_PERSONAGEM.y;
+    personagem.pulando = ESTADO_INICIAL_PERSONAGEM.pulando;
+    personagem.velocidadePulo = ESTADO_INICIAL_PERSONAGEM.velocidadePulo;
+    inimigo.x = ESTADO_INICIAL_INIMIGO.x;
+    inimigo.y = ESTADO_INICIAL_INIMIGO.y;
+    velocidade = CONFIG.VELOCIDADE_INICIAL;
 
-    // Reinicializar a pontuação
     pontuacao.resetar();
-
-    // Reinicializar o chão
     reiniciarChao();
 
     restartButton.style('display', 'none');
@@ -204,56 +222,56 @@ function reiniciarJogo() {
 // Função para reiniciar o chão
 function reiniciarChao() {
     chao = [];
-    for (let i = 0; i <= LARGURA_TELA / TAMANHO_CHAO + 1; i++) {
+    for (let i = 0; i <= CONFIG.LARGURA_TELA / CONFIG.TAMANHO_CHAO + 1; i++) {
         chao.push({
             sprite: chaoSprite,
-            x: i * TAMANHO_CHAO,
-            y: ALTURA_TELA - TAMANHO_CHAO,
-            largura: TAMANHO_CHAO,
-            altura: TAMANHO_CHAO
+            x: i * CONFIG.TAMANHO_CHAO,
+            y: CONFIG.ALTURA_TELA - CONFIG.TAMANHO_CHAO,
+            largura: CONFIG.TAMANHO_CHAO,
+            altura: CONFIG.TAMANHO_CHAO
         });
     }
 }
 
 // Captura de teclas pressionadas
 function keyPressed() {
-    if (key === ' ' && !personagem.pulando) {
+    if (key === ' ' && !personagem.pulando && estadoAtual === ESTADO_JOGO.JOGANDO) {
         personagem.pulando = true;
         personagem.velocidadePulo = personagem.alturaPulo;
         puloSound.play();
     }
 }
 
+// Função para verificar colisão por bounding box
+function verificaColisaoBoundingBox(obj1, obj2) {
+    return obj1.x < obj2.x + obj2.largura &&
+        obj1.x + obj1.largura > obj2.x &&
+        obj1.y < obj2.y + obj2.altura &&
+        obj1.y + obj1.altura > obj2.y;
+}
+
 // Função para verificar colisão pixel-perfect
 function verificaColisaoPixelPerfect(personagem, inimigo) {
-
-    // Obtém a área de sobreposição entre o personagem e o inimigo
     let xMin = Math.max(personagem.x, inimigo.x);
     let yMin = Math.max(personagem.y, inimigo.y);
     let xMax = Math.min(personagem.x + personagem.largura, inimigo.x + inimigo.largura);
     let yMax = Math.min(personagem.y + personagem.altura, inimigo.y + inimigo.altura);
 
-    // Itera sobre os pixels da área de sobreposição
     for (let y = yMin; y < yMax; y++) {
         for (let x = xMin; x < xMax; x++) {
-
-            // Converte as coordenadas do canvas para coordenadas relativas às imagens
             let xPersonagem = Math.floor(x - personagem.x);
             let yPersonagem = Math.floor(y - personagem.y);
             let xInimigo = Math.floor(x - inimigo.x);
             let yInimigo = Math.floor(y - inimigo.y);
 
-            // Obtém a cor do pixel nas máscaras
             let corPersonagem = personagem.mascara.get(xPersonagem, yPersonagem)[0];
             let corInimigo = inimigo.mascara.get(xInimigo, yInimigo)[0];
 
-            // Se ambos os pixels forem brancos (255)
             if (corPersonagem === 255 && corInimigo === 255) {
                 return true;
             }
         }
     }
 
-    // Se nenhum pixel branco se sobrepuser, não há colisão
     return false;
 }
