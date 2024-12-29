@@ -1,81 +1,91 @@
 /* Estilos Gerais */
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
+  font-family: 'Press Start 2P', cursive; /* Fonte estilo pixel art */
+  background: linear-gradient(135deg, #708090 20%, #2b3e50 80%); /* Gradiente de fundo */
+  color: #f5f5f5; /* Cor do texto mais clara */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   margin: 0;
+  text-align: center; /* Centralizar texto */
 }
 
 header {
-  background-color: #333;
+  background-color: #222;
   color: #fff;
-  text-align: center;
-  padding: 10px 0;
+  padding: 20px 0; /* Aumentar o padding */
   width: 100%;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra mais forte */
+  margin-bottom: 30px; /* Aumentar a margem */
+  border-radius: 0 0 15px 15px; /* Arredondar bordas inferiores */
 }
 
 h1 {
   margin: 0;
-  font-size: 2em;
+  font-size: 2.5em; /* Aumentar o tamanho da fonte */
+  text-shadow: 3px 3px 0 #000; /* Sombra no texto */
 }
 
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 30px; /* Aumentar o espaçamento */
 }
 
 /* Canvas */
 #canvas-container {
   width: 800px;
-  border: 3px solid #333;
-  border-radius: 10px;
+  border: 5px solid #222; /* Borda mais grossa */
+  border-radius: 15px; /* Aumentar o arredondamento */
   overflow: hidden;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Sombra mais pronunciada */
 }
 
 /* Instruções */
 #instructions {
-  background-color: #eee;
-  padding: 10px;
-  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+  color: #fff;
+  padding: 15px; /* Aumentar o padding */
+  border-radius: 10px;
   text-align: center;
+  font-size: 1em; /* Aumentar tamanho da fonte */
+  text-shadow: 2px 2px 0 #000; /* Sombra no texto */
 }
 
 /* Rodapé */
 footer {
-  margin-top: 20px;
+  margin-top: 30px; /* Aumentar a margem */
   text-align: center;
-  font-size: 0.8em;
-  color: #666;
+  font-size: 0.9em;
+  color: #ddd; /* Cor mais clara */
 }
 
 /* Botão de Reiniciar */
 #restart-button {
   display: none;
-  background-color: #4CAF50;
+  background-color: #00cc00; /* Cor de fundo mais vibrante */
   color: white;
-  padding: 15px 32px;
+  padding: 20px 40px; /* Aumentar o padding */
   text-align: center;
   text-decoration: none;
-  font-size: 16px;
-  margin: 20px 0 0 0;
+  font-size: 1.2em; /* Aumentar o tamanho da fonte */
+  margin: 30px 0; /* Aumentar a margem */
   cursor: pointer;
   border: none;
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease; /* Transição suave */
+  font-family: 'Press Start 2P', cursive; /* Fonte estilo pixel art */
+  text-shadow: 2px 2px 0 #000; /* Sombra no texto */
 }
 
 #restart-button:hover {
-  background-color: #45a049;
+  background-color: #00aa00; /* Escurecer no hover */
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7); /* Aumentar sombra no hover */
+  transform: translateY(-2px); /* Leve deslocamento para cima */
 }
 
 /* Ícones */
@@ -85,19 +95,48 @@ footer {
 
 /* Texto Game Over */
 .game-over-text {
-  font-size: 64px;
-  fill: #FF0000;
+  font-size: 4em; /* Aumentar tamanho da fonte */
+  fill: #ff0000;
   text-align: center;
-  font-family: 'Arial Black', sans-serif;
-  text-shadow: 4px 4px 0px #000;
+  font-family: 'Press Start 2P', cursive; /* Fonte estilo pixel art */
+  text-shadow: 5px 5px 0px #000; /* Sombra mais forte */
 }
 
 /* Texto Pontuação Final */
 .score-text {
-  font-size: 32px;
-  fill: #FFFFFF;
+  font-size: 2em; /* Aumentar tamanho da fonte */
+  fill: #f5f5f5;
   text-align: center;
-  font-family: 'Arial', sans-serif;
-  text-shadow: 2px 2px 0px #000;
+  font-family: 'Press Start 2P', cursive; /* Fonte estilo pixel art */
+  text-shadow: 3px 3px 0px #000; /* Sombra no texto */
 }
 
+/* Responsividade */
+@media (max-width: 850px) {
+  #canvas-container {
+      width: 95%; /* Ajustar largura do canvas */
+      border-width: 3px; /* Diminuir espessura da borda */
+  }
+
+  h1 {
+      font-size: 2em; /* Diminuir tamanho da fonte */
+  }
+
+  #instructions {
+      font-size: 0.9em; /* Diminuir tamanho da fonte */
+      padding: 10px; /* Diminuir padding */
+  }
+
+  #restart-button {
+      font-size: 1em; /* Diminuir tamanho da fonte */
+      padding: 15px 30px; /* Diminuir padding */
+  }
+
+  .game-over-text {
+      font-size: 3em; /* Diminuir tamanho da fonte */
+  }
+
+  .score-text {
+      font-size: 1.5em; /* Diminuir tamanho da fonte */
+  }
+}
