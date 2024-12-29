@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Plataforma</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1><span class="iconify" data-icon="noto-v1:video-game"></span> Jogo de Plataforma <span class="iconify" data-icon="noto-v1:man-running-light-skin-tone"></span></h1>
+    </header>
+    <main>
+        <div id="canvas-container"></div>
+        <div id="instructions">
+            <p>Pressione <span class="iconify" data-icon="flat-color-icons:up"></span> para pular!</p>
+        </div>
+        <button id="restart-button" style="display: none;">
+            <span class="iconify" data-icon="ion:reload-circle"></span> Reiniciar
+        </button>
+    </main>
+    <footer>
+        <p>Desenvolvido com P5.js</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <script src="sketch.js"></script>
+</body>
+</html>
