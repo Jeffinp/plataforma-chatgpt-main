@@ -1,4 +1,4 @@
-# Jogo de Plataforma (Direita)
+# Jogo de Plataforma
 
 Este projeto é um jogo de plataforma 2D desenvolvido em JavaScript com a biblioteca p5.js. O jogo foi inicialmente inspirado no código de [guilhermesilveira](https://github.com/guilhermesilveira/plataforma-chatgpt) e, desde então, passou por várias melhorias e ajustes.
 
