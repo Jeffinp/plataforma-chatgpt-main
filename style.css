@@ -111,32 +111,32 @@ footer {
   text-shadow: 3px 3px 0px #000; /* Sombra no texto */
 }
 
-/* Responsividade */
+/* Responsividade para Telas Menores */
 @media (max-width: 850px) {
   #canvas-container {
-      width: 95%; /* Ajustar largura do canvas */
-      border-width: 3px; /* Diminuir espessura da borda */
+      width: 95%;
+      border-width: 3px;
   }
 
   h1 {
-      font-size: 2em; /* Diminuir tamanho da fonte */
+      font-size: 2em;
   }
 
   #instructions {
-      font-size: 0.9em; /* Diminuir tamanho da fonte */
-      padding: 10px; /* Diminuir padding */
+      font-size: 0.9em;
+      padding: 10px;
   }
 
   #restart-button {
-      font-size: 1em; /* Diminuir tamanho da fonte */
-      padding: 15px 30px; /* Diminuir padding */
+      font-size: 1em;
+      padding: 15px 30px;
   }
 
   .game-over-text {
-      font-size: 3em; /* Diminuir tamanho da fonte */
+      font-size: 3em;
   }
 
   .score-text {
-      font-size: 1.5em; /* Diminuir tamanho da fonte */
+      font-size: 1.5em;
   }
 }

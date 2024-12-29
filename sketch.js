@@ -32,7 +32,8 @@ let personagem = {
         intervaloTroca: 10,
         contador: 0
     },
-    mascara: null
+    mascara: null,
+    andando: false, // Adicionando a propriedade para controlar o movimento horizontal
 };
 
 let inimigo = {
@@ -49,7 +50,8 @@ const ESTADO_INICIAL_PERSONAGEM = {
     x: personagem.x,
     y: personagem.y,
     pulando: false,
-    velocidadePulo: 0
+    velocidadePulo: 0,
+    andando: false
 };
 
 const ESTADO_INICIAL_INIMIGO = {
@@ -208,6 +210,7 @@ function reiniciarJogo() {
     personagem.y = ESTADO_INICIAL_PERSONAGEM.y;
     personagem.pulando = ESTADO_INICIAL_PERSONAGEM.pulando;
     personagem.velocidadePulo = ESTADO_INICIAL_PERSONAGEM.velocidadePulo;
+    personagem.andando = ESTADO_INICIAL_PERSONAGEM.andando;
     inimigo.x = ESTADO_INICIAL_INIMIGO.x;
     inimigo.y = ESTADO_INICIAL_INIMIGO.y;
     velocidade = CONFIG.VELOCIDADE_INICIAL;
@@ -233,12 +236,39 @@ function reiniciarChao() {
     }
 }
 
+// Função para pular (para eventos de toque)
+function pular() {
+    if (!personagem.pulando && estadoAtual === ESTADO_JOGO.JOGANDO) {
+        personagem.pulando = true;
+        personagem.velocidadePulo = CONFIG.ALTURA_INICIAL_PULO;
+        puloSound.play();
+    }
+}
+
+// Eventos de toque
+function touchStarted() {
+    pular();
+    return false; // Previne comportamento padrão do navegador
+}
+
 // Captura de teclas pressionadas
 function keyPressed() {
     if (key === ' ' && !personagem.pulando && estadoAtual === ESTADO_JOGO.JOGANDO) {
         personagem.pulando = true;
         personagem.velocidadePulo = personagem.alturaPulo;
         puloSound.play();
+    }
+
+    // Verifica se as teclas de seta para a esquerda ou direita estão pressionadas
+    if (keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
+        personagem.andando = true;
+    }
+}
+
+// Verifica se as teclas de seta para a esquerda ou direita foram liberadas
+function keyReleased() {
+    if (keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
+        personagem.andando = false;
     }
 }
 
