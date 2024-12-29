@@ -33,7 +33,7 @@ let personagem = {
         contador: 0
     },
     mascara: null,
-    andando: false, // Adicionando a propriedade para controlar o movimento horizontal
+    andando: false,
 };
 
 let inimigo = {
